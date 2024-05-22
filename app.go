@@ -41,7 +41,7 @@ func NewApp(o ...Options) *App {
 
 // Listen starts http server with provided options in app
 func (a *App) Listen() {
-	fmt.Sprintf("Server listen on port: %s", a.s.Addr)
+	fmt.Printf("Server listen on port: %s", a.s.Addr)
 	if err := http.ListenAndServe(a.s.Addr, nil); err != nil {
 		panic("failed to listen: " + err.Error())
 	}

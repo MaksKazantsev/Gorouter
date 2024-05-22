@@ -18,7 +18,7 @@ func TestGet(t *testing.T) {
 	go start()
 	time.Sleep(time.Second)
 
-	app.c.GET("/test", func(ctx *Ctx) {
+	app.GET("/test", func(ctx *Ctx) {
 		_, _ = ctx.Response.Write([]byte("received"))
 	})
 

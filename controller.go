@@ -10,7 +10,7 @@ type Controller struct {
 
 func NewController() *Controller {
 	return &Controller{
-		get: map[string]HandlerStruct{},
+		get: make(map[string]HandlerStruct),
 	}
 }
 

@@ -23,5 +23,7 @@ func (rr *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		handler.hFunc(toCtx(w, r))
 		break
+	default:
+		w.WriteHeader(http.StatusNotFound)
 	}
 }
