@@ -9,7 +9,7 @@ import (
 
 type App struct {
 	s *http.Server
-	c *Controller
+	*Controller
 }
 
 // NewApp inits new app
@@ -34,8 +34,8 @@ func NewApp(o ...Options) *App {
 		Handler:      router,
 	}
 	return &App{
-		s: s,
-		c: ctrl,
+		s,
+		ctrl,
 	}
 }
 
