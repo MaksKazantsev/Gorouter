@@ -1,4 +1,4 @@
-module github.com/MaksKazantsev/HTTP_Router
+module github.com/MaksKazantsev/Gorouter
 
 go 1.22.1
 
