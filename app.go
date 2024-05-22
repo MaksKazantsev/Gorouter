@@ -42,7 +42,7 @@ func NewApp(o ...Options) *App {
 // Listen starts http server with provided options in app
 func (a *App) Listen() {
 	fmt.Printf("Server listen on port: %s", a.s.Addr)
-	if err := http.ListenAndServe(a.s.Addr, nil); err != nil {
+	if err := a.s.ListenAndServe(); err != nil {
 		panic("failed to listen: " + err.Error())
 	}
 }
