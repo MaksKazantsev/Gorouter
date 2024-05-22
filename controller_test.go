@@ -1,4 +1,11 @@
-package main
+package gorouter
+
+import (
+	"github.com/stretchr/testify/require"
+	"net/http"
+	"testing"
+	"time"
+)
 
 var app *App
 
@@ -7,7 +14,6 @@ func start() {
 	app.Listen()
 }
 
-/*
 func TestGet(t *testing.T) {
 	go start()
 	time.Sleep(time.Second)
@@ -24,5 +30,3 @@ func TestGet(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, http.StatusOK, res.StatusCode)
 }
-
-*/

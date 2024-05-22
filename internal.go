@@ -1,4 +1,4 @@
-package main
+package gorouter
 
 import "net/http"
 

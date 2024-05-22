@@ -1,4 +1,4 @@
-package main
+package gorouter
 
 import (
 	"github.com/stretchr/testify/require"
