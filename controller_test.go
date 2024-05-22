@@ -1,6 +1,7 @@
 package gorouter
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/require"
 	"net/http"
 	"testing"
@@ -16,17 +17,19 @@ func start() {
 
 func TestGet(t *testing.T) {
 	go start()
-	time.Sleep(time.Second)
+	time.Sleep(time.Millisecond * 10)
 
-	app.GET("/test", func(ctx *Ctx) {
-		_, _ = ctx.Response.Write([]byte("received"))
+	app.GET("/testing", func(ctx *Ctx) {
+		_, _ = ctx.Response.Write([]byte("RECEIVED"))
+		fmt.Println("RECEIVED GET")
 	})
 
-	req, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:3005/test", nil)
+	getReq, err := http.NewRequest(http.MethodGet, "http://127.0.0.1:3005/testing", nil)
 	require.NoError(t, err)
 
-	client := http.Client{}
-	res, err := client.Do(req)
+	cl := http.Client{}
+	res, err := cl.Do(getReq)
 	require.NoError(t, err)
+
 	require.Equal(t, http.StatusOK, res.StatusCode)
 }
