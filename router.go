@@ -4,6 +4,7 @@ import "net/http"
 
 type Router struct {
 	c *Controller
+	http.HandlerFunc
 }
 
 func NewRouter(c *Controller) *Router {
@@ -11,4 +12,16 @@ func NewRouter(c *Controller) *Router {
 }
 
 func (rr *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	method := r.Method
+	url := r.URL.Path
+
+	switch method {
+	case http.MethodGet:
+		handler, ok := rr.c.get[url]
+		if !ok {
+			w.WriteHeader(http.StatusNotFound)
+		}
+		handler.hFunc(toCtx(w, r))
+		break
+	}
 }

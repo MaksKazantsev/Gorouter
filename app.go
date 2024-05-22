@@ -33,7 +33,6 @@ func NewApp(o ...Options) *App {
 		ReadTimeout:  opt.ReadT,
 		Handler:      router,
 	}
-
 	return &App{
 		s: s,
 		c: ctrl,
