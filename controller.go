@@ -51,87 +51,90 @@ type group struct {
 
 // POST is HTTP post method
 func (c *Controller) POST(path string, fn HandlerFunc) {
-	v := getVars(path)
-
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
 	}
 }
 
 // POST is HTTP post method
 func (g *group) POST(path string, fn HandlerFunc) {
-	v := getVars(path)
+	elems, vars := saveVars(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
+		vars:  vars,
+		elems: elems,
 	}
 }
 
 // DELETE is HTTP delete method
 func (g *group) DELETE(path string, fn HandlerFunc) {
-	v := getVars(path)
+	elems, vars := saveVars(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
+		vars:  vars,
+		elems: elems,
 	}
 }
 
 // DELETE is HTTP delete method
 func (c *Controller) DELETE(path string, fn HandlerFunc) {
-	v := getVars(path)
+	elems, vars := saveVars(path)
 
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
+		vars:  vars,
+		elems: elems,
 	}
 }
 
 // GET is HTTP get method
 func (g *group) GET(path string, fn HandlerFunc) {
-	v := getVars(path)
+	elems, vars := saveVars(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
+		vars:  vars,
+		elems: elems,
 	}
 }
 
 // GET is HTTP get method
 func (c *Controller) GET(path string, fn HandlerFunc) {
-	v := getVars(path)
+	elems, vars := saveVars(path)
 
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
+		vars:  vars,
+		elems: elems,
 	}
 }
 
 // PUT is HTTP put method
 func (c *Controller) PUT(path string, fn HandlerFunc) {
-	v := getVars(path)
+	elems, vars := saveVars(path)
 
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
+		vars:  vars,
+		elems: elems,
 	}
 }
 
 // PUT is HTTP put method
 func (g *group) PUT(path string, fn HandlerFunc) {
-	v := getVars(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
-		vars:  v,
 	}
 }
 
 type HandlerStruct struct {
 	hFunc HandlerFunc
-	vars  map[int]string
+
+	vars  map[string]string
+	elems []string
 }
 type HandlerFunc func(*Ctx)
 type Ctx struct {

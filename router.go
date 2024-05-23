@@ -19,6 +19,7 @@ func (rr *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		handler, ok := rr.c.get[url]
 		if !ok {
+			findPath(r, rr.c.get)
 			w.WriteHeader(http.StatusNotFound)
 		}
 		handler.hFunc(toCtx(w, r))
