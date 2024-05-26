@@ -1,6 +1,8 @@
 package gorouter
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type Router struct {
 	c *Controller
@@ -19,8 +21,8 @@ func (rr *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		handler, ok := rr.c.get[url]
 		if !ok {
-			findPath(r, rr.c.get)
 			w.WriteHeader(http.StatusNotFound)
+			return
 		}
 		handler.hFunc(toCtx(w, r))
 		break

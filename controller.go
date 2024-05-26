@@ -51,15 +51,18 @@ type group struct {
 
 // POST is HTTP post method
 func (c *Controller) POST(path string, fn HandlerFunc) {
+	elems, vars := handlePath(path)
+
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
+		elems: elems,
+		vars:  vars,
 	}
 }
 
 // POST is HTTP post method
 func (g *group) POST(path string, fn HandlerFunc) {
-	elems, vars := saveVars(path)
-
+	elems, vars := handlePath(path)
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
 		vars:  vars,
@@ -69,8 +72,7 @@ func (g *group) POST(path string, fn HandlerFunc) {
 
 // DELETE is HTTP delete method
 func (g *group) DELETE(path string, fn HandlerFunc) {
-	elems, vars := saveVars(path)
-
+	elems, vars := handlePath(path)
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
 		vars:  vars,
@@ -80,7 +82,7 @@ func (g *group) DELETE(path string, fn HandlerFunc) {
 
 // DELETE is HTTP delete method
 func (c *Controller) DELETE(path string, fn HandlerFunc) {
-	elems, vars := saveVars(path)
+	elems, vars := handlePath(path)
 
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
@@ -91,7 +93,7 @@ func (c *Controller) DELETE(path string, fn HandlerFunc) {
 
 // GET is HTTP get method
 func (g *group) GET(path string, fn HandlerFunc) {
-	elems, vars := saveVars(path)
+	elems, vars := handlePath(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
@@ -102,7 +104,7 @@ func (g *group) GET(path string, fn HandlerFunc) {
 
 // GET is HTTP get method
 func (c *Controller) GET(path string, fn HandlerFunc) {
-	elems, vars := saveVars(path)
+	elems, vars := handlePath(path)
 
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
@@ -113,7 +115,7 @@ func (c *Controller) GET(path string, fn HandlerFunc) {
 
 // PUT is HTTP put method
 func (c *Controller) PUT(path string, fn HandlerFunc) {
-	elems, vars := saveVars(path)
+	elems, vars := handlePath(path)
 
 	c.get[path] = HandlerStruct{
 		hFunc: fn,
@@ -124,9 +126,12 @@ func (c *Controller) PUT(path string, fn HandlerFunc) {
 
 // PUT is HTTP put method
 func (g *group) PUT(path string, fn HandlerFunc) {
+	elems, vars := handlePath(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
+		vars:  vars,
+		elems: elems,
 	}
 }
 
@@ -138,6 +143,8 @@ type HandlerStruct struct {
 }
 type HandlerFunc func(*Ctx)
 type Ctx struct {
-	Response http.ResponseWriter
-	Request  *http.Request
+	Response   http.ResponseWriter
+	Request    *http.Request
+	Parameters Parameters
 }
+type Parameters map[string]string

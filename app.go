@@ -34,17 +34,18 @@ func NewApp(o ...Options) *App {
 		Handler:      router,
 	}
 	return &App{
-		s,
-		ctrl,
+		s:          s,
+		Controller: ctrl,
 	}
 }
 
 // Listen starts http server with provided options in app
-func (a *App) Listen() {
-	fmt.Printf("Server listen on port: %s", a.s.Addr)
+func (a *App) Listen() error {
+	fmt.Printf("Server listen on port: %s\n", a.s.Addr)
 	if err := a.s.ListenAndServe(); err != nil {
-		panic("failed to listen: " + err.Error())
+		return fmt.Errorf("failed to listen: %w", err)
 	}
+	return nil
 }
 
 // Shutdown make graceful shutdown
