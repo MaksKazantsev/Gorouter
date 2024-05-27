@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// toCtx transfer response, request and variables (optional) to ctx pass it into handle function
 func toCtx(w http.ResponseWriter, r *http.Request, v ...Vars) *Ctx {
 	c := &Ctx{
 		Request:  r,
@@ -21,7 +22,7 @@ func toCtx(w http.ResponseWriter, r *http.Request, v ...Vars) *Ctx {
 	return c
 }
 
-// handlePath ha
+// handlePath handles path and return path elements and path variables
 func handlePath(path string) ([]string, map[int]string) {
 	pathElems := make([]string, 0)
 	paramsValue := make(map[int]string)

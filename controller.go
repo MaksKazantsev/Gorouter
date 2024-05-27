@@ -30,10 +30,10 @@ type Group interface {
 }
 
 type Handler interface {
-	GET(path string, fn HandlerFunc)
-	POST(path string, fn HandlerFunc)
-	DELETE(path string, fn HandlerFunc)
-	PUT(path string, fn HandlerFunc)
+	GET(path string, fn HandlerFunc, mw ...Middleware)
+	POST(path string, fn HandlerFunc, mw ...Middleware)
+	DELETE(path string, fn HandlerFunc, mw ...Middleware)
+	PUT(path string, fn HandlerFunc, mw ...Middleware)
 }
 
 // Group groups several handlers by one base string
@@ -50,7 +50,11 @@ type group struct {
 }
 
 // POST is HTTP post method
-func (c *Controller) POST(path string, fn HandlerFunc) {
+func (c *Controller) POST(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
 
 	c.get[path] = HandlerStruct{
@@ -61,8 +65,13 @@ func (c *Controller) POST(path string, fn HandlerFunc) {
 }
 
 // POST is HTTP post method
-func (g *group) POST(path string, fn HandlerFunc) {
+func (g *group) POST(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
+
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
 		vars:  vars,
@@ -71,8 +80,13 @@ func (g *group) POST(path string, fn HandlerFunc) {
 }
 
 // DELETE is HTTP delete method
-func (g *group) DELETE(path string, fn HandlerFunc) {
+func (g *group) DELETE(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
+
 	g.c.get[g.base+path] = HandlerStruct{
 		hFunc: fn,
 		vars:  vars,
@@ -81,7 +95,11 @@ func (g *group) DELETE(path string, fn HandlerFunc) {
 }
 
 // DELETE is HTTP delete method
-func (c *Controller) DELETE(path string, fn HandlerFunc) {
+func (c *Controller) DELETE(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
 
 	c.get[path] = HandlerStruct{
@@ -92,7 +110,11 @@ func (c *Controller) DELETE(path string, fn HandlerFunc) {
 }
 
 // GET is HTTP get method
-func (g *group) GET(path string, fn HandlerFunc) {
+func (g *group) GET(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
@@ -103,7 +125,11 @@ func (g *group) GET(path string, fn HandlerFunc) {
 }
 
 // GET is HTTP get method
-func (c *Controller) GET(path string, fn HandlerFunc) {
+func (c *Controller) GET(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
 
 	c.get[path] = HandlerStruct{
@@ -114,7 +140,11 @@ func (c *Controller) GET(path string, fn HandlerFunc) {
 }
 
 // PUT is HTTP put method
-func (c *Controller) PUT(path string, fn HandlerFunc) {
+func (c *Controller) PUT(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
 
 	c.get[path] = HandlerStruct{
@@ -125,7 +155,11 @@ func (c *Controller) PUT(path string, fn HandlerFunc) {
 }
 
 // PUT is HTTP put method
-func (g *group) PUT(path string, fn HandlerFunc) {
+func (g *group) PUT(path string, fn HandlerFunc, mw ...Middleware) {
+	for _, middleware := range mw {
+		fn = middleware(fn)
+	}
+
 	elems, vars := handlePath(path)
 
 	g.c.get[g.base+path] = HandlerStruct{
@@ -135,16 +169,23 @@ func (g *group) PUT(path string, fn HandlerFunc) {
 	}
 }
 
+// HandlerStruct represents all parts, from which Handler consist of.
 type HandlerStruct struct {
 	hFunc HandlerFunc
 
 	vars  map[int]string
 	elems []string
 }
+
+// HandlerFunc is a func that handles http request
 type HandlerFunc func(*Ctx)
+
+// Ctx represents response, request and variables and passes into HandlerFunc
 type Ctx struct {
 	Response http.ResponseWriter
 	Request  *http.Request
 	Vars     Vars
 }
+
+// Vars represents variables in the path, which can be declared by {variable}. This variables can be obtained from this map by their key
 type Vars map[string]string
