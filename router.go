@@ -14,17 +14,22 @@ func NewRouter(c *Controller) *Router {
 }
 
 func (rr *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
 	method := r.Method
-	url := r.URL.Path
 
 	switch method {
 	case http.MethodGet:
-		handler, ok := rr.c.get[url]
+		h, ok := rr.c.get[path]
 		if !ok {
+			var v Vars
+			if h, v, ok = findPath(r, rr.c.get); ok {
+				h.hFunc(toCtx(w, r, v))
+				return
+			}
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		handler.hFunc(toCtx(w, r))
+		h.hFunc(toCtx(w, r))
 		break
 	default:
 		w.WriteHeader(http.StatusNotFound)

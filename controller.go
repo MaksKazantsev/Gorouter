@@ -138,13 +138,13 @@ func (g *group) PUT(path string, fn HandlerFunc) {
 type HandlerStruct struct {
 	hFunc HandlerFunc
 
-	vars  map[string]string
+	vars  map[int]string
 	elems []string
 }
 type HandlerFunc func(*Ctx)
 type Ctx struct {
-	Response   http.ResponseWriter
-	Request    *http.Request
-	Parameters Parameters
+	Response http.ResponseWriter
+	Request  *http.Request
+	Vars     Vars
 }
-type Parameters map[string]string
+type Vars map[string]string
